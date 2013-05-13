@@ -1,5 +1,4 @@
-<!-- this creates a 400 x 400 canvas with a border with 5 x 5 spaces that are randomly assigned either black or white
-it will be used to make an implementation of Conway's Game of Life -->
+<!-- an implementation of Conway's Game of Life -->
 <html>
   <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -16,6 +15,12 @@ it will be used to make an implementation of Conway's Game of Life -->
               ctx.fillRect(x, y, 5, 5);
             }
           }
+        }
+      }
+      function play() {
+        while (True) {
+          draw();
+          setTimeout(play(), 100);
         }
       }
     </script>
