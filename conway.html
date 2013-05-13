@@ -9,6 +9,7 @@
         if (canvas.getContext){
           var ctx = canvas.getContext('2d');
         }
+        ctx.clearRect(0, 0, 400, 400); // clear canvas
         for (x = 0; x < 400; x += 5) {
           for (y = 0; y < 400; y+= 5) {
             if (Math.random() > .5) {
@@ -17,18 +18,13 @@
           }
         }
       }
-      function play() {
-        while (True) {
-          draw();
-          setTimeout(play(), 100);
-        }
-      }
+      function play() { setInterval(draw, 100); }
     </script>
     <style type="text/css">
       canvas { border: 2px solid black; }
     </style>
   </head>
-  <body onload="draw();">
+  <body onload="play();">
     <canvas id="matrix" height="400" width="400"></canvas>
   </body>
 </html>
