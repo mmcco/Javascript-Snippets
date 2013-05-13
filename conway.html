@@ -4,27 +4,91 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Canvas tutorial template</title>
     <script type="text/javascript">
+
+      block_size = 10; // x and y dimension of each block
+      block_x = 10; // number of blocks in x dimension
+      block_y = 10; // and y dimension
+      canvas_height = block_size * block_y;
+      canvas_width = block_size * block_x;
+
+      // initial probability of a space being filled
+      prob = 0.2;
+
+      // delay between frames in milliseconds
+      delay = 3000;
+
       function draw(){
+        // drawing logic
         var canvas = document.getElementById('matrix');
         if (canvas.getContext){
           var ctx = canvas.getContext('2d');
         }
-        ctx.clearRect(0, 0, 400, 400); // clear canvas
-        for (x = 0; x < 400; x += 5) {
-          for (y = 0; y < 400; y+= 5) {
-            if (Math.random() > .5) {
-              ctx.fillRect(x, y, 5, 5);
+        ctx.clearRect(0, 0, canvas_height, canvas_width); // clear canvas
+        for (x = 0; x < block_x; x++) {
+          for (y = 0; y < block_y; y++) {
+            if (blocks[x][y]) {
+              ctx.fillRect(y * block_size, x * block_size, block_size, block_size);
             }
           }
         }
+        // Conway logic
+        // new array so that changes don't affect future changes
+        new_blocks = blocks;
+        for (x = 0; x < block_x; x++) {
+          for (y = 0; y < block_y; y++) {
+            count = 0;
+            if (x < (block_x - 1) && blocks[x+1][y])
+              count++;
+            if (x < (block_x - 1) && y < (block_y - 1) && blocks[x+1][y+1])
+              count++;
+            if (x < (block_x - 1) && y > 0 && blocks[x+1][y-1])
+              count++;
+            if (y < (block_y - 1) && blocks[x][y+1])
+              count++;
+            if (y < (block_y - 1) && x > 0 && blocks[x-1][y+1])
+              count++;
+            if (y > 0 && blocks[x][y-1])
+              count++;
+            if (x > 0 && blocks[x-1][y])
+              count++;
+            if (x > 0 && y > 0 && blocks[x-1][y-1])
+              count++;
+            // conditionally change state of block
+            if (count < 2 || count > 3)
+              new_blocks[x][y] = false;
+            else if (count === 3)
+              new_blocks[x][y] = true;
+          }
+        }
+        blocks = new_blocks;
       }
-      function play() { setInterval(draw, 100); }
+
+      function play() {
+        // initialize the blocks
+        blocks = new Array(block_x); 
+        for (x = 0; x < block_x; x++) {
+          blocks[x] = new Array(block_y);
+          for (y = 0; y < block_y; y++) {
+            /*if (Math.random() < prob)
+              blocks[x][y] = true;
+            else blocks[x][y] = false; */
+            if (x == 4 && y == 3) blocks[x][y] = true;
+            else if (x == 4 && y == 4) blocks[x][y] = true;
+            else if (x == 4 && y == 5) blocks[x][y] = true;
+            else if (x == 3 && y == 5) blocks[x][y] = true;
+            else if (x == 2 && y == 4) blocks[x][y] = true;
+            else blocks[x][y] = false;
+          } 
+        } 
+        // call animation loop
+        setInterval(draw, delay); 
+      }
+
     </script>
-    <style type="text/css">
-      canvas { border: 2px solid black; }
-    </style>
   </head>
   <body onload="play();">
-    <canvas id="matrix" height="400" width="400"></canvas>
+  <script type="text/javascript">
+    document.write("<canvas id='matrix' height='" + canvas_height + "' width='" + canvas_width + "'></canvas>");
+  </script>
   </body>
 </html>
