@@ -39,11 +39,14 @@
         }
         for (row = 0; row < rows; row++) {
           for (col = 0; col < cols; col++) {
-            var count = 0;
-            var topRow = (row == 0) ? true : false;
+            var count = 0; // stores number of neighbors
+            // these four variables determine which neighbors don't exist
+            // that prevents us from going out of bounds in the array
+            var topRow = (row == 0) ? true : false; 
             var bottomRow = (row == rows-1) ? true : false;
             var topCol = (col == 0) ? true : false;
             var bottomCol = (col == cols-1) ? true : false;
+            // test for all eight neighbors if they exist
             if (!bottomRow && old_blocks[row+1][col])
               count++;
             if (!bottomRow && !bottomCol && old_blocks[row+1][col+1])
@@ -60,7 +63,7 @@
               count++;
             if (!topRow && !topCol && old_blocks[row-1][col-1])
                 count++;
-            // conditionally change state of block
+            // conditionally change state of block based on Conway's rules
             if (count < 2 || count > 3)
               blocks[row][col] = false;
             else if (count === 3)
@@ -79,6 +82,7 @@
             if (Math.random() < prob)
               blocks[row][col] = true;
             else blocks[row][col] = false;
+
             /* creates a glider, used as test case
 
             if (row == 4 && col == 3) blocks[row][col] = true;
