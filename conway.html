@@ -8,6 +8,9 @@ The default delay is 10 milliseconds (see variable "delay" below).
 
 This is ready to run, and will do so if you save it and then open it
 in your browser of choice.
+
+(In hindsight, it would probably have been better to use a 1D array
+for performance reasons.)
 -->
 
 <html>
@@ -28,6 +31,8 @@ in your browser of choice.
       // delay between frames in milliseconds
       var delay = 15;
 
+      // prints the current board to the screen, and then applies the game of life
+      // rules to generate the next board
       function draw(){
         // drawing logic
         var canvas = document.getElementById('matrix');
@@ -68,6 +73,7 @@ in your browser of choice.
         }
       }
 
+      // returns the array location of a row or column index, applying wrap-around
       function loc(num, isRow) {
         if (num === -1)
           return isRow ? rows-1 : cols-1;
@@ -79,6 +85,7 @@ in your browser of choice.
           return num % cols;
       }
 
+      // initializes and begins the game
       function play() {
         // initialize the blocks
         blocks = new Array(rows); 
