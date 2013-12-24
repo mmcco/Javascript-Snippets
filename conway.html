@@ -13,12 +13,12 @@ in your browser of choice.
 <html>
   <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Canvas tutorial template</title>
+    <title>Conway's Game of Life</title>
     <script type="text/javascript">
 
-      var block_size = 3; // x and y dimension of each block
-      var cols = 150; // number of columns
-      var rows = 150; // and rows 
+      var block_size = 3; // x and y dimension of each block in pixels
+      var cols = 270; // number of columns
+      var rows = 270; // and rows 
       var canvas_height = block_size * rows;
       var canvas_width = block_size * cols;
 
@@ -26,7 +26,7 @@ in your browser of choice.
       var prob = 0.1;
 
       // delay between frames in milliseconds
-      var delay = 10;
+      var delay = 15;
 
       function draw(){
         // drawing logic
@@ -48,51 +48,47 @@ in your browser of choice.
         for (i = 0; i < blocks.length; i++) {
           old_blocks[i] = blocks[i].slice();
         }
-        for (row = 0; row < rows; row++) {
-          for (col = 0; col < cols; col++) {
-            var count = 0; // stores number of neighbors
-            // these four variables determine which neighbors don't exist
-            // that prevents us from going out of bounds in the array
-            var topRow = (row == 0) ? true : false; 
-            var bottomRow = (row == rows-1) ? true : false;
-            var topCol = (col == 0) ? true : false;
-            var bottomCol = (col == cols-1) ? true : false;
-            // test for all eight neighbors if they exist
-            if (!bottomRow && old_blocks[row+1][col])
-              count++;
-            if (!bottomRow && !bottomCol && old_blocks[row+1][col+1])
-              count++;
-            if (!bottomRow && !topCol && old_blocks[row+1][col-1])
-              count++;
-            if (!bottomCol && old_blocks[row][col+1])
-              count++;
-            if (!topRow && !bottomCol && old_blocks[row-1][col+1])
-              count++;
-            if (!topCol && old_blocks[row][col-1])
-              count++;
-            if (!topRow && old_blocks[row-1][col])
-              count++;
-            if (!topRow && !topCol && old_blocks[row-1][col-1])
-                count++;
+        for (r = 0; r < rows; r++) {
+          for (c = 0; c < cols; c++) {
+            // stores number of neighbors
+            var count = old_blocks[r][loc(c+1, false)]
+                      + old_blocks[loc(r+1, true)][loc(c+1, false)]
+                      + old_blocks[loc(r-1, true)][loc(c+1, false)]
+                      + old_blocks[loc(r+1, true)][c]
+                      + old_blocks[loc(r-1, true)][c]
+                      + old_blocks[loc(r-1, true)][loc(c-1, false)]
+                      + old_blocks[r][loc(c-1, false)]
+                      + old_blocks[loc(r+1, true)][loc(c-1, false)];
             // conditionally change state of block based on Conway's rules
             if (count < 2 || count > 3)
-              blocks[row][col] = false;
+              blocks[r][c] = false;
             else if (count === 3)
-              blocks[row][col] = true;
+              blocks[r][c] = true;
           }
         }
+      }
+
+      function loc(num, isRow) {
+        if (num === -1)
+          return isRow ? rows-1 : cols-1;
+
+        else if (isRow)
+         return num % rows;
+
+        else
+          return num % cols;
       }
 
       function play() {
         // initialize the blocks
         blocks = new Array(rows); 
-        for (row = 0; row < rows; row++) {
-          blocks[row] = new Array(cols);
-          for (col = 0; col < cols; col++) {
+        for (r = 0; r < rows; r++) {
+          blocks[r] = new Array(cols);
+          for (c = 0; c < cols; c++) {
             // random generator
             if (Math.random() < prob)
-              blocks[row][col] = true;
-            else blocks[row][col] = false;
+              blocks[r][c] = true;
+            else blocks[r][c] = false;
 
             /* creates a glider, used as test case
 
