@@ -17,3 +17,9 @@ paras = Array.prototype.slice.call(paras);
 paras.forEach(function (para) {
     para.style.maxWidth = '40em';
 });
+
+var lists = document.getElementsByTagName('ul');
+lists = Array.prototype.slice.call(lists);
+lists.forEach(function (list) {
+    list.style.maxWidth = '40em';
+});
